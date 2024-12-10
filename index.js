@@ -33,7 +33,7 @@ module.exports = function (schema) {
 
 function Message (schema) {
   var message = {
-    name: schema.name,
+    name: schema.name || schema.title,
     enums: [],
     messages: [],
     fields: []
