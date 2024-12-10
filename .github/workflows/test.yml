@@ -1,0 +1,50 @@
+name: Test and Validate Proto
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  test-and-validate:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Install protoc-gen-js
+      run: npm install -g protoc-gen-js
+
+    - name: Install protoc
+      run: |
+        PROTOC_VERSION="29.1"
+        PROTOC_ZIP="protoc-${PROTOC_VERSION}-linux-x86_64.zip"
+        curl -OL "https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/${PROTOC_ZIP}"
+        sudo unzip -o $PROTOC_ZIP -d /usr/local bin/protoc
+        sudo unzip -o $PROTOC_ZIP -d /usr/local 'include/*'
+        rm -f $PROTOC_ZIP
+        protoc --version
+
+    - name: Run tests
+      run: npm test
+
+    - name: Validate Proto file
+      run: |
+        # Find all .proto files in the project
+        mkdir -p out
+        find . -name "*.generated.proto" -type f | while read -r proto_file; do
+          echo "Validating $proto_file"
+          # Attempt to compile the proto file to check for syntax errors
+          if ! protoc --proto_path=$(dirname "$proto_file") --js_out=import_style=commonjs,binary:./out "$proto_file"; then
+            echo "Error: Invalid proto file: $proto_file"
+            exit 1
+          fi
+        done
