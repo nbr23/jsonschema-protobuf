@@ -12,8 +12,8 @@ test('jsonschema', function (t) {
 	}
 	fs.writeFileSync('./test-data/out/test.generated.proto', result);
 
-	// var test = fs.readFileSync('./test-data/test.proto').toString();
+	var test = fs.readFileSync('./test-data/test.proto').toString();
 
-	// t.deepEquals(protobuf.parse(result), protobuf.parse(test));
+	t.deepEquals(protobuf.parse(result), protobuf.parse(test));
 	t.end();
 });
