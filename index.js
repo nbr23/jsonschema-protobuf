@@ -1,109 +1,108 @@
-var protobuf = require('protocol-buffers-schema')
+var protobuf = require('protocol-buffers-schema');
 var mappings = {
-  'array': 'repeated',
-//  'object': 'message',
-  'integer': 'int32',
-  'number': 'int32',
-  'string': 'string',
-  'boolean': 'bool'
-}
+	'array': 'repeated',
+	//  'object': 'message',
+	'integer': 'int32',
+	'number': 'int32',
+	'string': 'string',
+	'boolean': 'bool',
+};
 
 var protoBufRoot = {
-  syntax: 2,
-  package: null,
-  enums: [],
-  messages: []
+	syntax: 2,
+	package: null,
+	enums: [],
+	messages: [],
 };
 
 module.exports = function (schema) {
-  protoBufRoot = {
-    syntax: 2,
-    package: null,
-    enums: [],
-    messages: []
-  };
-  if (typeof schema === 'string') schema = JSON.parse(schema)
-  result = protoBufRoot;
+	protoBufRoot = {
+		syntax: 2,
+		package: null,
+		enums: [],
+		messages: [],
+	};
+	if (typeof schema === 'string') schema = JSON.parse(schema);
+	const result = protoBufRoot;
 
-  if (schema.type === 'object') {
-    result.messages.push(Message(schema))
-  }
-  return protobuf.stringify(result)
-}
+	if (schema.type === 'object') {
+		result.messages.push(Message(schema));
+	}
+	return protobuf.stringify(result);
+};
 
 function Message (schema) {
-  var message = {
-    name: schema.name || schema.title,
-    enums: [],
-    messages: [],
-    fields: []
-  }
+	var message = {
+		name: schema.name || schema.title,
+		enums: [],
+		messages: [],
+		fields: [],
+	};
 
-  var tag = 1
-  for (var key in schema.properties) {
-    var field = schema.properties[key]
-    field.name = key
-    if (field.type === 'object') {
-      field.type = field.name + 'Type';
-      message.fields.push(Field(field, tag, message))
-      field.name = field.type;
-      message.messages.push(Message(field))
-    }else{
-      message.fields.push(Field(field, tag, message))
-    }
-    tag += 1
-  }
+	var tag = 1;
+	for (var key in schema.properties) {
+		var field = schema.properties[key];
+		field.name = key;
+		if (field.type === 'object') {
+			field.type = field.name + 'Type';
+			message.fields.push(Field(field, tag, message));
+			field.name = field.type;
+			message.messages.push(Message(field));
+		}else{
+			message.fields.push(Field(field, tag, message));
+		}
+		tag += 1;
+	}
 
-  for (var i in schema.required) {
-    var required = schema.required[i]
-    for (var i in message.fields) {
-      var field = message.fields[i]
-      if (required === field.name) field.required = true
-    }
-  }
+	for (var i in schema.required) {
+		var required = schema.required[i];
+		for (var j in message.fields) {
+			if (required === message.fields[j].name) message.fields[j].required = true;
+		}
+	}
 
-  return message
+	return message;
 }
 
 function Field(field, tag, message) {
-  var type = mappings[field.type] || field.type
-  var repeated = false
+	var type = mappings[field.type] || field.type;
+	var repeated = false;
 
-  if (field.type === 'array') {
-    repeated = true
-    if (field.items.type === 'object') {
-      field.items.name = field.name;
-      protoBufRoot.messages.push(Message(field.items))
-      type = field.name
-    } else {
-      type = field.items.type
-    }    
-  }else if(field.type === 'string' && field.enum){
-    type = field.name + "Enum";
-    message.enums.push(Enum(field))
-  }
+	if (field.type === 'array') {
+		repeated = true;
+		if (field.items.type === 'object') {
+			field.items.name = field.name;
+			protoBufRoot.messages.push(Message(field.items));
+			type = field.name;
+		} else {
+			type = field.items.type;
+		}
+	}else if(field.type === 'string' && field.enum){
+		type = field.name + 'Enum';
+		message.enums.push(Enum(field));
+	}
 
 
-  return {
-    name: field.name,
-    type: type,
-    tag: tag,
-    repeated: repeated
-  }
+	return {
+		name: field.name,
+		type: type,
+		tag: tag,
+		repeated: repeated,
+	};
 }
 
 function Enum(field){
 //  var options = {"option1" : 0, "option2" : 1};
-   var protoEnum = {
-    name: field.name + "Enum",
-    options: [],
-    values: []
-  }
+	var protoEnum = {
+		name: field.name + 'Enum',
+		options: [],
+		values: [],
+	};
 
-for (var e in field.enum) {
-    var enumValue = {  value : e, options : []}
-    var enumName = field.enum[e].replace(new RegExp('[.]', 'g'), '_')
-    protoEnum.values[enumName] = enumValue;
-  };
-  return protoEnum;
+	for (var e in field.enum) {
+		var enumValue = {  value : e, options : []};
+		var enumName = field.enum[e].replace(new RegExp('[.]', 'g'), '_');
+		protoEnum.values[enumName] = enumValue;
+	}
+	return protoEnum;
 }
