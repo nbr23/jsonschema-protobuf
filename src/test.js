@@ -4,10 +4,10 @@ var json2proto = require('./');
 var protobuf = require('protocol-buffers-schema');
 
 test('jsonschema', function (t) {
-	var schema = fs.readFileSync('test.jsonschema').toString();
+	var schema = fs.readFileSync('./test-data/test.jsonschema').toString();
 	var result = json2proto(JSON.parse(schema));
 
-	var test = fs.readFileSync('test.proto').toString();
+	var test = fs.readFileSync('./test-data/test.proto').toString();
 	t.deepEquals(protobuf.parse(result), protobuf.parse(test));
 	t.end();
 });

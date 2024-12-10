@@ -2,12 +2,12 @@
   "name": "jsonschema-protobuf",
   "version": "1.0.2-fork",
   "description": "json-schema.org to protobuf object converter",
-  "main": "index.js",
+  "main": "src/index.js",
   "bin": {
     "jsonschema-protobuf": "cli.js"
   },
   "scripts": {
-    "test": "node test.js"
+    "test": "node src/test.js"
   },
   "repository": {
     "type": "git",
