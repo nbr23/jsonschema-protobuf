@@ -40,7 +40,7 @@ jobs:
       run: |
         # Find all .proto files in the project
         mkdir -p out
-        find . -name "*.generated.proto" -type f | while read -r proto_file; do
+        find ./test-data/out -name "*.generated.proto" -type f | while read -r proto_file; do
           echo "Validating $proto_file"
           # Attempt to compile the proto file to check for syntax errors
           if ! protoc --proto_path=$(dirname "$proto_file") --js_out=import_style=commonjs,binary:./out "$proto_file"; then

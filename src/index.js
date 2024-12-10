@@ -9,7 +9,7 @@ var mappings = {
 };
 
 var protoBufRoot = {
-	syntax: 2,
+	syntax: 3,
 	package: null,
 	enums: [],
 	messages: [],
@@ -17,7 +17,7 @@ var protoBufRoot = {
 
 module.exports = function (schema) {
 	protoBufRoot = {
-		syntax: 2,
+		syntax: 3,
 		package: null,
 		enums: [],
 		messages: [],
@@ -52,13 +52,6 @@ function Message (schema) {
 			message.fields.push(Field(field, tag, message));
 		}
 		tag += 1;
-	}
-
-	for (var i in schema.required) {
-		var required = schema.required[i];
-		for (var j in message.fields) {
-			if (required === message.fields[j].name) message.fields[j].required = true;
-		}
 	}
 
 	return message;

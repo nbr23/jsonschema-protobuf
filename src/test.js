@@ -7,7 +7,10 @@ test('jsonschema', function (t) {
 	var schema = fs.readFileSync('./test-data/test.jsonschema').toString();
 	var result = json2proto(JSON.parse(schema));
 
-	fs.writeFileSync('./test-data/test.generated.proto', result);
+	if (!fs.existsSync('./test-data/out')){
+		fs.mkdirSync('./test-data/out');
+	}
+	fs.writeFileSync('./test-data/out/test.generated.proto', result);
 
 	// var test = fs.readFileSync('./test-data/test.proto').toString();
 
