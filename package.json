@@ -1,17 +1,14 @@
 {
   "name": "jsonschema-protobuf",
-  "version": "1.0.2-fork",
+  "version": "2.0.0",
   "description": "json-schema.org to protobuf object converter",
   "main": "src/index.js",
-  "bin": {
-    "jsonschema-protobuf": "cli.js"
-  },
   "scripts": {
     "test": "node src/test.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ArthurvdKnaap/jsonschema-protobuf.git"
+    "url": "git+https://github.com/nbr23/jsonschema-protobuf.git"
   },
   "author": "Arthur van der Knaap, Karissa McKelvey <karissa@karissamck.com> (http://karissamck.com/)",
   "license": "BSD",
