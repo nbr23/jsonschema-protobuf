@@ -16,8 +16,7 @@
   "author": "Arthur van der Knaap, Karissa McKelvey <karissa@karissamck.com> (http://karissamck.com/)",
   "license": "BSD",
   "dependencies": {
-    "protocol-buffers-schema": "3.3.2",
-    "tape": "4.2.0",
-    "json-schema-deref": "0.5.0"
+    "protocol-buffers-schema": "^3.6.0",
+    "tape": "^5.9.0"
   }
 }
