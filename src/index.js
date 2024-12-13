@@ -1,5 +1,7 @@
-var protobuf = require('protocol-buffers-schema');
-var mappings = {
+const protobuf = require('protocol-buffers-schema');
+const _ = require('lodash');
+
+const mappings = {
 	'array': 'repeated',
 	//  'object': 'message',
 	'integer': 'int32',
@@ -33,7 +35,7 @@ module.exports = function (schema) {
 
 function Message (schema) {
 	var message = {
-		name: schema.name || schema.title,
+		name: _.camelCase(schema.name || schema.title),
 		enums: [],
 		messages: [],
 		fields: [],

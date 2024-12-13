@@ -13,6 +13,7 @@
   "author": "Arthur van der Knaap, Karissa McKelvey <karissa@karissamck.com> (http://karissamck.com/)",
   "license": "BSD",
   "dependencies": {
+    "lodash": "^4.17.21",
     "protocol-buffers-schema": "^3.6.0",
     "tape": "^5.9.0"
   }
