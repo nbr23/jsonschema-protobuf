@@ -17,10 +17,10 @@ var protoBufRoot = {
 	messages: [],
 };
 
-module.exports = function (schema) {
+module.exports = function (schema, packageName=null) {
 	protoBufRoot = {
 		syntax: 3,
-		package: null,
+		package: packageName,
 		enums: [],
 		messages: [],
 	};
@@ -87,7 +87,6 @@ function Field(field, tag, message) {
 }
 
 function Enum(field){
-//  var options = {"option1" : 0, "option2" : 1};
 	var protoEnum = {
 		name: field.name + 'Enum',
 		options: [],
